@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://b80f37ywjpjk7"]
+
+[ext_resource type="PackedScene" uid="uid://uhmrkr05844h" path="res://player.tscn" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://6xcmq4r5fy6r" path="res://xr_interface_loading_script.gd" id="1_ig7tw"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_ig7tw"]
+sky_material = SubResource("ProceduralSkyMaterial_7dm0k")
+
+[sub_resource type="Environment" id="Environment_0xm2m"]
+background_mode = 2
+sky = SubResource("Sky_ig7tw")
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7dm0k"]
+albedo_color = Color(0.057960022, 0.46, 0.036799993, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ig7tw"]
+material = SubResource("StandardMaterial3D_7dm0k")
+size = Vector2(20, 20)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
+albedo_color = Color(0.0333333, 0, 1, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_h2yge"]
+material = SubResource("StandardMaterial3D_0xm2m")
+inner_radius = 5.0
+outer_radius = 10.0
+
+[node name="Main" type="Node3D" unique_id=1460361595]
+
+[node name="Player" parent="." unique_id=469713499 instance=ExtResource("1_0xm2m")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=596101526]
+environment = SubResource("Environment_0xm2m")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1404878934]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="StartingPad" type="MeshInstance3D" parent="." unique_id=1062571703]
+mesh = SubResource("PlaneMesh_ig7tw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1210650520]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -6.1809707)
+mesh = SubResource("TorusMesh_h2yge")
+
+[node name="XRInterfaceLoadingScript" type="Node" parent="." unique_id=160883176]
+script = ExtResource("1_ig7tw")

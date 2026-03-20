@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://uhmrkr05844h"]
+
+[ext_resource type="Script" uid="uid://c1gpo0cjbl7x" path="res://vmc_trackers.gd" id="1_4flbx"]
+
+[node name="Player" type="XROrigin3D" unique_id=469713499]
+
+[node name="XRCamera3D" type="XRCamera3D" parent="." unique_id=1268876098]
+
+[node name="VMCTrackers" type="Node3D" parent="." unique_id=377016032]
+script = ExtResource("1_4flbx")
