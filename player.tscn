@@ -1,10 +1,23 @@
 [gd_scene format=3 uid="uid://uhmrkr05844h"]
 
 [ext_resource type="Script" uid="uid://c1gpo0cjbl7x" path="res://vmc_trackers.gd" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://s1r6bng5w7ep" path="res://player.gd" id="1_onrkg"]
 
-[node name="Player" type="XROrigin3D" unique_id=469713499]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
 
-[node name="XRCamera3D" type="XRCamera3D" parent="." unique_id=1268876098]
+[node name="Player" type="CharacterBody3D" unique_id=1606035188 groups=["player"]]
+script = ExtResource("1_onrkg")
 
-[node name="VMCTrackers" type="Node3D" parent="." unique_id=377016032]
+[node name="XROrigin3D" type="XROrigin3D" parent="." unique_id=469713499]
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D" unique_id=1268876098]
+near = 0.1
+
+[node name="VMCTrackers" type="Node3D" parent="XROrigin3D" unique_id=377016032]
 script = ExtResource("1_4flbx")
+sphere_radius = null
+sphere_color = null
+chest_offset = null
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=564075355]
+shape = SubResource("CapsuleShape3D_4flbx")
