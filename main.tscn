@@ -3,9 +3,13 @@
 [ext_resource type="PackedScene" uid="uid://uhmrkr05844h" path="res://player.tscn" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://6xcmq4r5fy6r" path="res://xr_interface_loading_script.gd" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://dr36r4bywb2uk" path="res://perpetual_floor_collision.gd" id="3_h2yge"]
+[ext_resource type="Shader" uid="uid://bbh8ug3n0x8iu" path="res://assets/materials/water.gdshader" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://c3e3gnhd8sw1d" path="res://water_mesh.gd" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://dul5ltad3nb17" path="res://island_generator.gd" id="6_7mycd"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_bottom_color = Color(0, 0.101960786, 0.39607844, 1)
 ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 
 [sub_resource type="Sky" id="Sky_ig7tw"]
@@ -15,9 +19,17 @@ sky_material = SubResource("ProceduralSkyMaterial_7dm0k")
 background_mode = 2
 sky = SubResource("Sky_ig7tw")
 glow_enabled = true
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0, 0.101960786, 0.39607844, 1)
+fog_density = 1.0
+fog_aerial_perspective = 1.0
+fog_sky_affect = 0.188
+fog_depth_begin = 500.0
+fog_depth_end = 1500.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7dm0k"]
-albedo_color = Color(0.057960022, 0.46, 0.036799993, 1)
+albedo_color = Color(0.036799993, 0.46, 0.4317867, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ig7tw"]
 material = SubResource("StandardMaterial3D_7dm0k")
@@ -34,6 +46,38 @@ outer_radius = 10.0
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_0xm2m"]
 height = 0.1
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7mycd"]
+frequency = 1.0
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_272bh"]
+noise = SubResource("FastNoiseLite_7mycd")
+seamless = true
+as_normal_map = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_5vw27"]
+frequency = 0.8927
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_kek77"]
+noise = SubResource("FastNoiseLite_5vw27")
+seamless = true
+as_normal_map = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lquwl"]
+render_priority = 0
+shader = ExtResource("4_1bvp3")
+shader_parameter/albedo = Color(0, 0.101960786, 0.39607844, 1)
+shader_parameter/normalmap_tex1 = SubResource("NoiseTexture2D_272bh")
+shader_parameter/normalmap_tex2 = SubResource("NoiseTexture2D_kek77")
+shader_parameter/direction1 = Vector2(1, 0)
+shader_parameter/scroll_speed1 = 0.0050000002375
+shader_parameter/direction2 = Vector2(0, 1)
+shader_parameter/scroll_speed2 = 0.010000000475
+shader_parameter/player_location = Vector2(0, 0)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7mycd"]
+size = Vector2(3000, 3000)
+
 [node name="Main" type="Node3D" unique_id=1460361595]
 
 [node name="XRInterfaceLoadingScript" type="Node" parent="." unique_id=160883176]
@@ -47,6 +91,9 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545
 shadow_enabled = true
 
 [node name="Player" parent="." unique_id=469713499 instance=ExtResource("1_0xm2m")]
+pedaling_multiplier = 60.0
+max_speed = 100.0
+decay = 8.0
 
 [node name="StartingPlatform" type="Node3D" parent="." unique_id=1773688605]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
@@ -64,3 +111,14 @@ script = ExtResource("3_h2yge")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PerpetualFloorCollision" unique_id=83348079]
 shape = SubResource("CylinderShape3D_0xm2m")
+
+[node name="WaterMesh" type="MeshInstance3D" parent="." unique_id=1636596168]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -80, 0)
+material_override = SubResource("ShaderMaterial_lquwl")
+mesh = SubResource("PlaneMesh_7mycd")
+script = ExtResource("5_lquwl")
+
+[node name="IslandGenerator" type="Node3D" parent="." unique_id=1719736239]
+script = ExtResource("6_7mycd")
+max_island_size = 200.0
+base_material_color = Color(0.12539999, 0.38, 0.12539999, 1)
